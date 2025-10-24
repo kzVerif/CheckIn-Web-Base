@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import { PrismaClient } from "@prisma/client/extension";
 import { NextRequest , NextResponse } from "next/server";
 const prisma = new PrismaClient();
@@ -97,4 +95,3 @@ export async function Get(
     }
     
 }
->>>>>>> 057da4f352a2114bd475bb330cf6e2d13f85e270

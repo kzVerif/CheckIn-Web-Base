@@ -51,14 +51,14 @@ model checkins {
 }
 
 model devices {
-  id            String @id @map("_id") // ใช้ ID ที่ส่งเข้ามาเอง เช่น device_id
-  email         String
+  id            String   @id @map("_id")
+  email         String   @unique
   name          String
   password      String
-  registered_at String
-  student_id    String
+  registered_at DateTime @default(now())
+  student_id    String   @unique
 
-  checkins checkins[]
+  checkins      checkins[]
 }
 
 model zones {

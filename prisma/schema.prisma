@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type CheckinsPosition {
+  x Float
+  y Float
+}
+
+type ZonesBeacons {
+  label       String
+  mac_address String
+  x           Int
+  y           Int
+}
+
+type ZonesRoom {
+  building    ZonesRoomBuilding
+  floor       Int
+  room_number String
+}
+
+type ZonesRoomBuilding {
+  code String
+  name String
+}
+
+type ZonesSchedules {
+  course_code String
+  day_of_week Int
+  end_time    String
+  semester    String
+  start_time  String
+}
+
+model checkins {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  course_code String
+  device_id   String
+  position    CheckinsPosition
+  status      String
+  timestamp   DateTime @default(now())
+  zone_id     String
+
+  device devices @relation(fields: [device_id], references: [id])
+}
+
+model devices {
+  id            String @id @map("_id") // ใช้ ID ที่ส่งเข้ามาเอง เช่น device_id
+  email         String
+  name          String
+  password      String
+  registered_at String
+  student_id    String
+
+  checkins checkins[]
+}
+
+model zones {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  beacons   ZonesBeacons[]
+  polygon   Json
+  room      ZonesRoom
+  schedules ZonesSchedules[]
+}

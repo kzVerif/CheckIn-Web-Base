@@ -36,15 +36,25 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const response = await prisma.zones.create({
       data: body,
     });
-    return NextResponse.json({
-      message: "สร้าง zones สำเร็จ",
-      response: response,
-    });
+    return NextResponse.json(
+      {
+        message: "สร้าง zones สำเร็จ",
+        response: response,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.log("Cannot create zones: ", error);
-    return NextResponse.json({
-      message: "สร้าง zones ไม่สำเร็จ",
-      reason: error,
-    });
+    return NextResponse.json(
+      {
+        message: "สร้าง zones ไม่สำเร็จ",
+        reason: error,
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

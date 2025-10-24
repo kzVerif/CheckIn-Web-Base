@@ -29,9 +29,7 @@ export default function LoginPage() {
         className="bg-white rounded-2xl p-10 shadow-md w-[380px] text-center"
       >
         <h1 className="text-2xl font-bold mb-2">เข้าสู่ระบบแอดมิน</h1>
-        <p className="text-gray-500 mb-6 text-sm">
-          ระบบจัดการการเข้าเรียน
-        </p>
+        <p className="text-gray-500 mb-6 text-sm">ระบบจัดการการเข้าเรียน</p>
 
         {error && (
           <p className="bg-red-100 text-red-600 text-sm px-3 py-2 rounded-md mb-4">

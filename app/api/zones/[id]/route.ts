@@ -31,6 +31,8 @@ export async function PATCH(
     return NextResponse.json({
       message: "ไม่สามารถอัพเดท zones ได้",
       reason: error,
+    },{
+        status: 500
     });
   }
 }
@@ -51,12 +53,16 @@ export async function DELETE(
     return NextResponse.json({
       message: "ลบข้อมูล zones สำเร็จ",
       response: response,
+    },{
+        status: 200
     });
   } catch (error) {
     console.log("Cannot delete zones: ", error);
     return NextResponse.json({
       message: "ไม่สามารถลบข้อมูล zones ได้",
       reason: error,
+    },{
+        status: 500
     });
   }
 }
@@ -77,12 +83,16 @@ export async function GET(
     return NextResponse.json({
       message: "ดึงข้อมูลด้วย zonesID สำเร็จ",
       data: data,
+    },{
+        status: 200
     });
   } catch (error) {
     console.log("Cannnot get zones by ID: ", error);
     return NextResponse.json({
       message: "ไม่สามารถดึงข้อมูลด้วย zoneID ได้",
       reason: error,
+    },{
+        status: 500
     });
   }
 }

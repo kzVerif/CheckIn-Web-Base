@@ -24,6 +24,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const isUserExist = await prisma.devices.findFirst({
+      where: {
+        OR: [
+          { student_id: body.student_id },
+          { email: body.email },
+          { id: body.device_id },
+        ],
+      },
+    });
+
+    if (isUserExist) {
+      return NextResponse.json(
+        { message: "มีผู้ใช้นี้อยู่แล้ว ไม่สามารถสมัครซ้ำได้" },
+        { status: 400 }
+      );
+    }
+    
     const realPassword = await bcrypt.hash(body.password, 10);
 
     const response = await prisma.devices.create({
@@ -33,7 +50,6 @@ export async function POST(req: NextRequest) {
         password: realPassword,
         email: body.email,
         name: body.name,
-        registered_at: new Date(),
       },
     });
 

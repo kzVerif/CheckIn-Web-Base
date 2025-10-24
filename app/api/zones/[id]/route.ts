@@ -5,15 +5,14 @@ const prisma = new PrismaClient();
 //update zones
 export async function PATCH(
   req: NextRequest,
-  res: NextResponse,
   { params }: { params: { id: string } }
 ) {
   try {
     const body = await req.json();
-    const zoneId = await params.id;
+    const {id} = await params;
     const response = await prisma.zones.update({
       where: {
-        id: zoneId,
+        id: id,
       },
       data: body,
     });
@@ -40,14 +39,13 @@ export async function PATCH(
 //delete zones
 export async function DELETE(
   req: NextRequest,
-  res: NextResponse,
   { params }: { params: { id: string } }
 ) {
   try {
-    const zoneId = await params.id;
+    const {id} = await params;
     const response = await prisma.zones.delete({
       where: {
-        id: zoneId,
+        id: id,
       },
     });
     return NextResponse.json({
@@ -73,10 +71,10 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const zoneId = await params.id;
+    const {id} = await params;
     const data = await prisma.zones.findUnique({
       where: {
-        id: zoneId,
+        id: id,
       },
     });
     return NextResponse.json({

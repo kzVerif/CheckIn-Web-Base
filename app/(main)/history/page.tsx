@@ -110,13 +110,12 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="container mx-auto min-h-screen pt-24 px-4 sm:px-6 lg:px-10">
+    <div className="container mx-auto min-h-screen py-24 px-4 sm:px-6 lg:px-10">
+      {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 m-1">ประวัติเช็คอิน</h1>
-          <p className="text-gray-500 text-sm">
-            ประวัติการเข้าเรียนของนักเรียน
-          </p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-1">History</h1>
+          <p className="text-gray-500 mb-8">ประวัติการเข้าเรียนของนักเรียน</p>
         </div>
 
         <button

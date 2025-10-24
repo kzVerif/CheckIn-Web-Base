@@ -95,15 +95,12 @@ export default function ZonesPage() {
   };
 
   return (
-    <div className="container mx-auto min-h-screen bg-gray-50 py-24 px-4 sm:px-6 lg:px-10">
+    <div className="container mx-auto min-h-screen py-24 px-4 sm:px-6 lg:px-10">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 m-1">จัดการ Zones</h1>
-          <p className="text-gray-500 text-sm">
-            จัดการพื้นที่เรียนและตารางเรียน
-          </p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-1">Zones</h1>
+          <p className="text-gray-500 mb-8">จัดการพื้นที่และตารางเรียน</p>
         </div>
-
         <button
           onClick={() => setOpenAdd(true)}
           className="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-700 transition"

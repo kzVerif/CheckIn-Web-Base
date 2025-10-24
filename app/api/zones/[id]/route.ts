@@ -60,3 +60,29 @@ export async function DELETE(
     });
   }
 }
+
+//get by Id
+export async function GET(
+  req: NextRequest,
+  res: NextResponse,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const zoneId = await params.id;
+    const data = await prisma.zones.findUnique({
+      where: {
+        id: zoneId,
+      },
+    });
+    return NextResponse.json({
+      message: "ดึงข้อมูลด้วย zonesID สำเร็จ",
+      data: data,
+    });
+  } catch (error) {
+    console.log("Cannnot get zones by ID: ", error);
+    return NextResponse.json({
+      message: "ไม่สามารถดึงข้อมูลด้วย zoneID ได้",
+      reason: error,
+    });
+  }
+}

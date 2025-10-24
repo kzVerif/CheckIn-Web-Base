@@ -9,7 +9,7 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    const {id} = await params;
+    const { id } = await params;
     const response = await prisma.zones.update({
       where: {
         id: id,
@@ -27,12 +27,15 @@ export async function PATCH(
     );
   } catch (error) {
     console.log("Cannot update zones: ", error);
-    return NextResponse.json({
-      message: "ไม่สามารถอัพเดท zones ได้",
-      reason: error,
-    },{
-        status: 500
-    });
+    return NextResponse.json(
+      {
+        message: "ไม่สามารถอัพเดท zones ได้",
+        reason: error,
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }
 
@@ -42,26 +45,32 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const {id} = await params;
+    const { id } = await params;
     const response = await prisma.zones.delete({
       where: {
         id: id,
       },
     });
-    return NextResponse.json({
-      message: "ลบข้อมูล zones สำเร็จ",
-      response: response,
-    },{
-        status: 200
-    });
+    return NextResponse.json(
+      {
+        message: "ลบข้อมูล zones สำเร็จ",
+        response: response,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.log("Cannot delete zones: ", error);
-    return NextResponse.json({
-      message: "ไม่สามารถลบข้อมูล zones ได้",
-      reason: error,
-    },{
-        status: 500
-    });
+    return NextResponse.json(
+      {
+        message: "ไม่สามารถลบข้อมูล zones ได้",
+        reason: error,
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }
 
@@ -71,25 +80,31 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const {id} = await params;
+    const { id } = await params;
     const data = await prisma.zones.findUnique({
       where: {
         id: id,
       },
     });
-    return NextResponse.json({
-      message: "ดึงข้อมูลด้วย zonesID สำเร็จ",
-      data: data,
-    },{
-        status: 200
-    });
+    return NextResponse.json(
+      {
+        message: "ดึงข้อมูลด้วย zonesID สำเร็จ",
+        data: data,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.log("Cannnot get zones by ID: ", error);
-    return NextResponse.json({
-      message: "ไม่สามารถดึงข้อมูลด้วย zoneID ได้",
-      reason: error,
-    },{
-        status: 500
-    });
+    return NextResponse.json(
+      {
+        message: "ไม่สามารถดึงข้อมูลด้วย zoneID ได้",
+        reason: error,
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

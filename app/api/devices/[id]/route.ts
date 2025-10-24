@@ -1,11 +1,10 @@
-import { PrismaClient } from "@prisma/client/extension";
+import { PrismaClient } from "@prisma/client";
 import { NextRequest , NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 //update devices
-async function PATCH(
+export async function PATCH(
     req: NextRequest,
-    res: NextResponse,
     {params}: {params: {id: string}}
 ) {
     try { 
@@ -67,7 +66,7 @@ export async function DELETE(
 }
 
 //get by id 
-export async function Get(
+export async function GET(
     req: NextRequest,
     { params }: {params: {id: string} }
 ) {

@@ -1,16 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
-interface registerData {
-  device_id: string;
-  student_id: string;
-  name: string;
-  email: string;
-  password: string;
-  rePassword: string;
-}
+
 
 //get all device
 export async function GET(req: NextRequest, res: NextResponse) {

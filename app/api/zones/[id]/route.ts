@@ -70,7 +70,6 @@ export async function DELETE(
 //get by Id
 export async function GET(
   req: NextRequest,
-  res: NextResponse,
   { params }: { params: { id: string } }
 ) {
   try {

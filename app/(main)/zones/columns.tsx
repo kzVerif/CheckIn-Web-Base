@@ -109,14 +109,14 @@ export const columns: ColumnDef<zones>[] = [
           <Link href={`/zones/${zone.id}`}>
             <button
               //   onClick={handleEdit}
-              className="px-2 py-1 rounded-md bg-yellow-400 hover:bg-yellow-500 text-black text-sm font-medium"
+              className="px-2 py-1 rounded-md bg-yellow-400 hover:bg-yellow-500 text-black text-sm font-medium ease-in-out duration-300 cursor-pointer"
             >
               แก้ไข
             </button>
           </Link>
           <button
             onClick={handleDelete}
-            className="px-2 py-1 rounded-md bg-red-500 hover:bg-red-600 text-white text-sm font-medium"
+            className="px-2 py-1 rounded-md bg-red-500 hover:bg-red-600 text-white text-sm font-medium ease-in-out duration-300 cursor-pointer"
           >
             ลบ
           </button>

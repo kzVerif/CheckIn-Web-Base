@@ -22,7 +22,7 @@ export default async function DemoPage() {
         </div>
 
         <Link href="/zones/add">
-          <Button className="flex items-center gap-2 shadow-sm">
+          <Button className="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-700 ease-in-out duration-300 cursor-pointer">
             <Plus className="w-4 h-4" />
             เพิ่ม Zone
           </Button>

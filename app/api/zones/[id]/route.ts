@@ -10,6 +10,8 @@ export async function PATCH(
   try {
     const body = await req.json();
     const { id } = await params;
+    console.log("id patch",id);
+    
     const response = await prisma.zones.update({
       where: {
         id: id,

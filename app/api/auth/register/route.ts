@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     if (isUserExist) {
       return NextResponse.json(
-        { message: "มีผู้ใช้นี้อยู่แล้ว ไม่สามารถสมัครซ้ำได้" },
+        { message: "มีผู้ใช้นี้อยู่แล้ว/มีคนใช้อุปกรณ์นี้แล้ว ไม่สามารถสมัครซ้ำได้" },
         { status: 400 }
       );
     }

@@ -2,28 +2,43 @@ import { CheckCircle, Clock, MapPin, Smartphone } from "lucide-react";
 import Avatar from "../components/Avatar";
 import { getDashBoardData } from "@/actions/dashboard";
 
-interface DashboardResponse {
+export interface DashboardResponse {
   message: string;
-  count: {
-    checkin_count: number;
-    zone_count: number;
-    device_count: number;
-  };
+  count: DashboardCount;
   recentCheckins: Checkin[];
 }
 
-interface Checkin {
+export interface DashboardCount {
+  checkin_count: number;
+  zone_count: number;
+  device_count: number;
+}
+
+export interface Checkin {
   id: string;
   course_code: string;
   device_id: string;
   status: string;
-  timestamp: string;
+  timestamp: string; // ถ้าอยากใช้งานแบบ Date จริงใน code สามารถเปลี่ยนเป็น Date ได้
   zone_id: string;
-  position: {
-    x: number;
-    y: number;
-  };
+  position: CheckinPosition;
+  device: Device; // ✅ ความสัมพันธ์กับ model devices
 }
+
+export interface CheckinPosition {
+  x: number;
+  y: number;
+}
+
+export interface Device {
+  id: string;
+  email: string;
+  name: string;
+  password: string;
+  registered_at: string; // ถ้าอยากให้เป็น Date ก็เปลี่ยนได้
+  student_id: string;
+}
+
 
 export default async function Dashboard() {
   const dashboard: DashboardResponse = await getDashBoardData();
@@ -78,13 +93,13 @@ export default async function Dashboard() {
               >
                 {/* ✅ ฝั่ง Avatar + รายละเอียด */}
                 <div className="flex items-center gap-3">
-                  <Avatar name={item.device_id} />
+                  <Avatar name={item.device.name} />
                   <div>
                     <p className="font-medium text-gray-800">
-                      {item.course_code}
+                      {item.device.name}
                     </p>
                     <p className="text-sm text-gray-500">
-                      อุปกรณ์: {item.device_id}
+                      รหัสวิชา: {item.course_code}
                     </p>
                   </div>
                 </div>

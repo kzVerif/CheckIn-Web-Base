@@ -24,6 +24,9 @@ export async function GET() {
 
     const recentCheckins = await prisma.checkins.findMany({
       take: 5,
+      include: {
+        device: true
+      }
     });
 
     return NextResponse.json(

@@ -47,7 +47,7 @@ model checkins {
   timestamp   DateTime @default(now())
   zone_id     String
 
-  device devices @relation(fields: [device_id], references: [id])
+  device devices? @relation(fields: [device_id], references: [id])
 }
 
 model devices {

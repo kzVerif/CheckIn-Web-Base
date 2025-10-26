@@ -1,9 +1,11 @@
 "use server"
 import axios from "axios";
 import { revalidatePath } from "next/cache"
+const BASE_URL = process.env.MAIN_URL ?? "http://localhost:3000";
+
 export async function getAllZones() {
   try {
-    const zones = await axios.get(`${process.env.MAIN_URL}/api/zones`);
+    const zones = await axios.get(`${BASE_URL}/api/zones`);
     const zone = zones.data;
     return zone.data;
   } catch (error) {
@@ -15,7 +17,7 @@ export async function getAllZones() {
 
 export async function getZoneById(id: string) {
     try {
-    const zones = await axios.get(`${process.env.MAIN_URL}/api/zones/${id}`);
+    const zones = await axios.get(`${BASE_URL}/api/zones/${id}`);
     const zone = zones.data;
     return zone.data;
   } catch (error) {
@@ -28,7 +30,7 @@ export async function getZoneById(id: string) {
 export async function deleteZone(id: string) {
   try {
     // ✅ เรียก API DELETE ฝั่ง backend
-    const res = await fetch(`${process.env.MAIN_URL}/api/zones/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/zones/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     })
@@ -63,7 +65,7 @@ export async function updateZone(id: string, formData: any) {
     }
 
     // ✅ เรียก API ฝั่ง backend
-    const res = await fetch(`${process.env.MAIN_URL}/api/zones/${id}`, {
+    const res = await fetch(`${BASE_URL}/api/zones/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(zoneData),
@@ -105,7 +107,7 @@ export async function createZone(formData: any) {
       ], // mock polygon เริ่มต้น
     }
 
-    const res = await fetch(`${process.env.MAIN_URL}/api/zones`, {
+    const res = await fetch(`${BASE_URL}/api/zones`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(zoneData),

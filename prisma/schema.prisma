@@ -68,3 +68,5 @@ model zones {
   room      ZonesRoom
   schedules ZonesSchedules[]
 }
+
+

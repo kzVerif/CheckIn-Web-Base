@@ -83,7 +83,7 @@ export async function GET(
     const { id } = await params;
     const data = await prisma.checkins.findMany({
       where: {
-        id: id,
+        device_id: id,
       },
     });
     return NextResponse.json(

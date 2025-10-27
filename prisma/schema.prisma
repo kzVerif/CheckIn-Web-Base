@@ -12,13 +12,6 @@ type CheckinsPosition {
   y Float
 }
 
-type ZonesBeacons {
-  label       String
-  mac_address String
-  x           Int
-  y           Int
-}
-
 type ZonesRoom {
   building    ZonesRoomBuilding
   floor       Int
@@ -30,35 +23,41 @@ type ZonesRoomBuilding {
   name String
 }
 
-type ZonesSchedules {
-  course_code String
-  day_of_week Int
-  end_time    String
-  semester    String
-  start_time  String
-}
-
-model checkins {
+model Checkins {
   id          String           @id @default(auto()) @map("_id") @db.ObjectId
   course_code String
-  device_id   String
   position    CheckinsPosition
   status      String
-  timestamp   DateTime @default(now())
-  zone_id     String
+  timestamp   DateTime         @default(now())
 
-  device devices? @relation(fields: [device_id], references: [id])
+  // ✅ Relation กับ Zone
+  zone_id String? @db.ObjectId
+  zone    Zones?  @relation(fields: [zone_id], references: [id])
+
+  // ✅ Relation กับ Device
+  device_id String
+  device    Devices? @relation(fields: [device_id], references: [device_id])
 }
 
-model devices {
-  id            String   @id @map("_id")
-  email         String   @unique
+model Devices {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  device_id     String   @unique
+  student_id    String   @unique
   name          String
   password      String
   registered_at DateTime @default(now())
-  student_id    String   @unique
 
-  checkins      checkins[]
+  checkins Checkins[]
+}
+
+model Zones {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  polygon Json
+  room    ZonesRoom
+
+  beacons   Beacons[]
+  schedules Schedules[]
+  Checkins  Checkins[]
 }
 
 model zones {
@@ -67,14 +66,6 @@ model zones {
   polygon   Json
   room      ZonesRoom
   schedules ZonesSchedules[]
-}
-
-model Beacons {
-  id          String   @id @map("_id") @db.ObjectId
-  label       String
-  mac_address String   @unique
-  x           Int
-  y           Int
 }
 
 

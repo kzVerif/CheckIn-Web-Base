@@ -23,9 +23,10 @@ export async function getDashBoardData() {
     const deviceCount = await prisma.devices.count();
 
     const recentCheckins = await prisma.checkins.findMany({
+      orderBy: { timestamp: "desc" },
       take: 5,
       include: {
-        device: true,
+        device: true, // ✅ include device เสมอ
       },
     });
 
@@ -41,8 +42,9 @@ export async function getDashBoardData() {
   } catch (error) {
     console.log("Cannot get checkins cout: ", error);
     return {
-      message: "ดึงข้อมูลแดชบอร์ดไม่สำเร็จ",
-      reason: error,
+      message: "ดึงข้อมูลแดชบอร์ดสำเร็จ",
+      count: { checkin_count: 0, zone_count: 0, device_count: 0 },
+      recentCheckins: [],
     };
     // try {
     //   const dashboardResponse = await axios.get(

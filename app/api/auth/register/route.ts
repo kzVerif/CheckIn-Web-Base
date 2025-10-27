@@ -17,6 +17,9 @@ export async function POST(req: NextRequest) {
   try {
     const body: registerData = await req.json();
 
+    console.log(body);
+    
+
     if (body.password !== body.rePassword) {
       return NextResponse.json(
         { message: "รหัสผ่านไม่ตรงกัน" },
@@ -45,10 +48,10 @@ export async function POST(req: NextRequest) {
 
     const response = await prisma.devices.create({
       data: {
-        id: body.device_id,
+        id: body.device_id ?? "000",
         student_id: body.student_id,
         password: realPassword,
-        email: body.email,
+        email: body.email ?? "00@gmail.com",
         name: body.name,
       },
     });

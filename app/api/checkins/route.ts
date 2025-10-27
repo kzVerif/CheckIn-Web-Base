@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { JsonValue } from "@prisma/client/runtime/library";
+import { revalidatePath } from "next/cache";
 const prisma = new PrismaClient();
 
 // get all checkins
@@ -113,7 +114,6 @@ export async function POST(req: NextRequest) {
     const body: CheckinRequest = await req.json();
     const { bluetooth_devices, device_id } = body;
     console.log("check in body: ", body);
-    
 
     // 🧱 ดึง Zone ทั้งหมดจาก DB
     const zones: Zone[] = await prisma.zones.findMany();
@@ -140,9 +140,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 🕓 ตรวจสอบเวลาเรียนปัจจุบัน
-    const now = new Date();
-    const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ...
+    /* -------------------- 🕓 ตรวจสอบเวลาเรียนปัจจุบัน -------------------- */
+    const now = new Date(); // mock เวลา (UTC)
+    const dayOfWeek = now.getDay();
     const currentTime = now.toTimeString().slice(0, 5); // "09:30"
 
     const currentSchedule = matchedZone.schedules.find(
@@ -157,15 +157,46 @@ export async function POST(req: NextRequest) {
         {
           message: "ยังไม่ถึงเวลาเรียน หรืออยู่นอกคาบเรียน",
           zone: matchedZone.room,
+          time: now,
+          currentTime,
+          dayOfWeek
         },
         { status: 400 }
       );
     }
 
-    // 📍 ประมาณตำแหน่งจาก Beacon
+    /* -------------------- 🔁 ป้องกันการเช็กชื่อซ้ำ -------------------- */
+    // ตรวจว่ามี record ที่ device เดิม เคยเช็กใน zone/course เดียวกันภายในคาบนี้หรือยัง
+    const existingCheckin = await prisma.checkins.findFirst({
+      where: {
+        device_id,
+        zone_id: matchedZone.id,
+        course_code: currentSchedule.course_code,
+        timestamp: {
+          gte: new Date(`${now.toISOString().split("T")[0]}T${currentSchedule.start_time}:00Z`),
+          lte: new Date(`${now.toISOString().split("T")[0]}T${currentSchedule.end_time}:00Z`),
+        },
+      },
+    });
+
+    if (existingCheckin) {
+      return NextResponse.json(
+        {
+          message: "คุณได้เช็คชื่อในคาบนี้ไปแล้ว",
+          zone: matchedZone.room,
+          course: currentSchedule.course_code,
+          checkin_id: existingCheckin.id,
+        },
+        { status: 409 } // Conflict
+      );
+    }
+
+    /* -------------------- 📍 ประมาณตำแหน่งจาก Beacon -------------------- */
     const position = estimatePosition(matchedZone.beacons, bluetooth_devices);
 
-    // 🧾 บันทึกข้อมูลเช็กชื่อ
+    revalidatePath("/");
+
+    /* -------------------- 🧾 บันทึกข้อมูลเช็กชื่อ -------------------- */
     const newCheckin = await prisma.checkins.create({
       data: {
         device_id,
@@ -173,11 +204,11 @@ export async function POST(req: NextRequest) {
         status: "checked_in",
         course_code: currentSchedule.course_code,
         position,
-        timestamp: new Date(),
+        timestamp: now,
       },
     });
 
-    // ✅ ตอบกลับ
+    /* -------------------- ✅ ตอบกลับ -------------------- */
     return NextResponse.json(
       {
         message: "เช็คชื่อสำเร็จ",
@@ -200,3 +231,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

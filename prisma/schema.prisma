@@ -28,11 +28,11 @@ model Checkins {
   course_code String
   position    CheckinsPosition
   status      String
-  timestamp   DateTime         @default(now())
+  timestamp   DateTime @default(now())
 
   // ✅ Relation กับ Zone
-  zone_id String? @db.ObjectId
-  zone    Zones?  @relation(fields: [zone_id], references: [id])
+  zone_id  String? @db.ObjectId
+  zone     Zones?  @relation(fields: [zone_id], references: [id])
 
   // ✅ Relation กับ Device
   device_id String
@@ -47,25 +47,41 @@ model Devices {
   password      String
   registered_at DateTime @default(now())
 
-  checkins Checkins[]
+
+  checkins      Checkins[]
 }
 
 model Zones {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  polygon Json
-  room    ZonesRoom
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  polygon   Json
+  room      ZonesRoom
 
   beacons   Beacons[]
   schedules Schedules[]
-  Checkins  Checkins[]
 }
 
-model zones {
-  id        String           @id @default(auto()) @map("_id") @db.ObjectId
-  beacons   ZonesBeacons[]
-  polygon   Json
-  room      ZonesRoom
-  schedules ZonesSchedules[]
+model Beacons {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  label       String
+  mac_address String @unique
+  x           Int
+  y           Int
+
+  zone_id String? @db.ObjectId
+  zone    Zones?  @relation(fields: [zone_id], references: [id])
+}
+
+model Schedules {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  course_code String @unique
+  course_name String?
+  day_of_week Int
+  end_time    String
+  semester    String
+  start_time  String
+
+  zone_id String? @db.ObjectId
+  zone    Zones?  @relation(fields: [zone_id], references: [id])
 }
 
 

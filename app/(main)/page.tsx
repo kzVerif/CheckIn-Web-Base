@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, MapPin, Smartphone } from "lucide-react";
+import { CheckCircle, MapPin, Smartphone } from "lucide-react";
 import Avatar from "../components/Avatar";
 import { getDashBoardData } from "@/actions/dashboard";
 
@@ -19,10 +19,10 @@ export interface Checkin {
   course_code: string;
   device_id: string;
   status: string;
-  timestamp: string; // ถ้าอยากใช้งานแบบ Date จริงใน code สามารถเปลี่ยนเป็น Date ได้
+  timestamp: Date;
   zone_id: string;
   position: CheckinPosition;
-  device: Device; // ✅ ความสัมพันธ์กับ model devices
+  device: Device | null; // ✅ แก้ตรงนี้
 }
 
 export interface CheckinPosition {
@@ -35,10 +35,9 @@ export interface Device {
   email: string;
   name: string;
   password: string;
-  registered_at: string; // ถ้าอยากให้เป็น Date ก็เปลี่ยนได้
+  registered_at: Date; // ถ้าอยากให้เป็น Date ก็เปลี่ยนได้
   student_id: string;
 }
-
 
 export default async function Dashboard() {
   const dashboard: DashboardResponse = await getDashBoardData();
@@ -74,10 +73,13 @@ export default async function Dashboard() {
         </h2>
         <div className="divide-y divide-gray-100">
           {dashboard.recentCheckins.map((item, index) => {
-            const formattedTime = new Date(item.timestamp).toLocaleString("th-TH", {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
+            const formattedTime = new Date(item.timestamp).toLocaleString(
+              "th-TH",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              }
+            );
 
             const statusColor =
               item.status === "checked_in"
@@ -93,10 +95,10 @@ export default async function Dashboard() {
               >
                 {/* ✅ ฝั่ง Avatar + รายละเอียด */}
                 <div className="flex items-center gap-3">
-                  <Avatar name={item.device.name} />
+                  <Avatar name={item.device?.name ?? "ไม่ทราบชื่อ"} />
                   <div>
                     <p className="font-medium text-gray-800">
-                      {item.device.name}
+                      {item.device?.name ?? "ไม่ทราบชื่อ"}
                     </p>
                     <p className="text-sm text-gray-500">
                       รหัสวิชา: {item.course_code}

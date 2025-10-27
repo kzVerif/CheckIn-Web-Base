@@ -1,12 +1,10 @@
-import AddZoneForm from "./AddZoneForm"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import AddZoneForm from "./AddZoneForm";
 
 export default function AddZonePage() {
   return (
-    <div className="container mx-auto py-12">
-      <div className="flex items-center justify-between mb-8">
-        <div>
+    <div className="flex items-center justify-center px-4 sm:px-6 lg:px-10">
+      <div className="w-full max-w-2xl p-8">
+        <div className="text-center mb-8">
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">
             เพิ่ม Zone ใหม่
           </h1>
@@ -15,12 +13,8 @@ export default function AddZonePage() {
           </p>
         </div>
 
-        <Link href="/zones">
-          <Button variant="outline">กลับไปหน้า Zone</Button>
-        </Link>
+        <AddZoneForm />
       </div>
-
-      <AddZoneForm />
     </div>
-  )
+  );
 }

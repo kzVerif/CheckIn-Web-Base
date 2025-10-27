@@ -69,4 +69,12 @@ model zones {
   schedules ZonesSchedules[]
 }
 
+model Beacons {
+  id          String   @id @map("_id") @db.ObjectId
+  label       String
+  mac_address String   @unique
+  x           Int
+  y           Int
+}
+
 

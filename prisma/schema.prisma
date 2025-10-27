@@ -12,13 +12,6 @@ type CheckinsPosition {
   y Float
 }
 
-type ZonesBeacons {
-  label       String
-  mac_address String
-  x           Int
-  y           Int
-}
-
 type ZonesRoom {
   building    ZonesRoomBuilding
   floor       Int
@@ -30,43 +23,63 @@ type ZonesRoomBuilding {
   name String
 }
 
-type ZonesSchedules {
+model Checkins {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
   course_code String
+  position    CheckinsPosition
+  status      String
+  timestamp   DateTime         @default(now())
+
+  // ✅ Relation กับ Zone
+  zone_id String? @db.ObjectId
+  zone    Zones?  @relation(fields: [zone_id], references: [id])
+
+  // ✅ Relation กับ Device
+  device_id String
+  device    Devices? @relation(fields: [device_id], references: [device_id])
+}
+
+model Devices {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  device_id     String   @unique
+  student_id    String   @unique
+  name          String
+  password      String
+  registered_at DateTime @default(now())
+
+  checkins Checkins[]
+}
+
+model Zones {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  polygon Json
+  room    ZonesRoom
+
+  beacons   Beacons[]
+  schedules Schedules[]
+  Checkins  Checkins[]
+}
+
+model Beacons {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  label       String
+  mac_address String @unique
+  x           Int
+  y           Int
+
+  zone_id String? @db.ObjectId
+  zone    Zones?  @relation(fields: [zone_id], references: [id])
+}
+
+model Schedules {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  course_code String  @unique
+  course_name String?
   day_of_week Int
   end_time    String
   semester    String
   start_time  String
+
+  zone_id String? @db.ObjectId
+  zone    Zones?  @relation(fields: [zone_id], references: [id])
 }
-
-model checkins {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  course_code String
-  device_id   String
-  position    CheckinsPosition
-  status      String
-  timestamp   DateTime @default(now())
-  zone_id     String
-
-  device devices? @relation(fields: [device_id], references: [id])
-}
-
-model devices {
-  id            String   @id @map("_id")
-  email         String   @unique
-  name          String
-  password      String
-  registered_at DateTime @default(now())
-  student_id    String   @unique
-
-  checkins      checkins[]
-}
-
-model zones {
-  id        String           @id @default(auto()) @map("_id") @db.ObjectId
-  beacons   ZonesBeacons[]
-  polygon   Json
-  room      ZonesRoom
-  schedules ZonesSchedules[]
-}
-
-

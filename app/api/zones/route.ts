@@ -1,60 +1,38 @@
 import { PrismaClient } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+
 const prisma = new PrismaClient();
 
-// get all zones
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET() {
   try {
-    const data = await prisma.zones.findMany();
-    return NextResponse.json(
-      {
-        message: "ดึงข้อมูล zones ทั้งหมดสำเร็จ",
-        data: data,
+    const zones = await prisma.zones.findMany({
+      include: {
+        beacons: true,       // ✅ ดึง Beacon ทั้งหมดของแต่ละ Zone
+        schedules: true,     // ✅ ดึง Schedule ของ Zone นั้น
+        Checkins: {
+          include: {
+            device: true,    // ✅ ในแต่ละ Checkin ดึงข้อมูล Device ที่เช็คชื่อด้วย
+          },
+        },
       },
-      {
-        status: 200,
-      }
-    );
-  } catch (error) {
-    console.log("Cannot get all zones: ", error);
-    return NextResponse.json(
-      {
-        message: "ไม่สามารถดึงข้อมูล zones ทั้งหมด ได้",
-        reason: error,
-      },
-      {
-        status: 500,
-      }
-    );
-  }
-}
-
-//create zones
-export async function POST(req: NextRequest, res: NextResponse) {
-  try {
-    const body = await req.json();
-    const response = await prisma.zones.create({
-      data: body,
     });
-    return NextResponse.json(
-      {
-        message: "สร้าง zones สำเร็จ",
-        response: response,
+
+    const devices = await prisma.devices.findMany({
+      include: {
+        checkins: {
+          include: {
+            zone: true,      // ✅ ให้ checkin ของ device แต่ละตัว ดึง zone มาด้วย
+          },
+        },
       },
-      {
-        status: 200,
-      }
-    );
+    });
+
+    return NextResponse.json({ zones, devices });
   } catch (error) {
-    console.log("Cannot create zones: ", error);
+    console.error("❌ Error fetching data:", error);
     return NextResponse.json(
-      {
-        message: "สร้าง zones ไม่สำเร็จ",
-        reason: error,
-      },
-      {
-        status: 500,
-      }
+      { message: "เกิดข้อผิดพลาดขณะดึงข้อมูล" },
+      { status: 500 }
     );
   }
 }
